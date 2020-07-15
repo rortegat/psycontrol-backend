@@ -1,6 +1,5 @@
 package com.riot.psycontrol.config;
 
-import com.riot.psycontrol.security.jwt.JwtProvider;
 import com.riot.psycontrol.security.jwt.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -90,11 +89,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/users/login").permitAll()
                 .antMatchers("/users/signup").permitAll()
-                .antMatchers("/users/**").authenticated()
-                .antMatchers("/patients/**").authenticated()
-                .antMatchers("/files/**").authenticated()
-                .antMatchers("/consults/**").authenticated()
-        //.anyRequest().authenticated();
+                //.antMatchers("/users/**")
+                //.antMatchers("/patients/**")
+                //.antMatchers("/files/**")
+                //.antMatchers("/consults/**")
+        .anyRequest().authenticated();
         ;
 
         //http.apply(new JwtRequestFilterConfigurer(jwtProvider));

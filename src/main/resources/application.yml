@@ -17,9 +17,11 @@ spring:
 
 config:
   file:
-    upload-dir: ${HOME}/Storage
+    #upload-dir: ${HOME}/Storage # For Linux filesystem
+    upload-dir: C:\\Storage # For Windows filesystem
   jwt:
-    secretKey: SuperSecreto
+    secretKey: SuperSecretKey
+    validityInMilliseconds: 3600000 #60*60000 = 1Hour
 
 logging:
   level:

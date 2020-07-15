@@ -15,8 +15,6 @@ import java.util.Set;
 
 
 @Data
-@EqualsAndHashCode(exclude = {"user","consults"})
-@ToString(exclude={"user","consults"})
 @JsonIgnoreProperties({"user","consults"})
 @Entity
 @EntityListeners(AuditingEntityListener.class)

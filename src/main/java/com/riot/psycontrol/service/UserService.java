@@ -27,14 +27,11 @@ public class UserService {
 
     @Autowired UserRepo userRepo;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    @Autowired PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private JwtProvider jwtProvider;
+    @Autowired JwtProvider jwtProvider;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    @Autowired AuthenticationManager authenticationManager;
 
     public List<User> getUsers(){
         return userRepo.findAll();
@@ -48,7 +45,7 @@ public class UserService {
             user.setRoles(Arrays.asList(roleService.getRole("DEMO")));
             userRepo.save(user);
         } else {
-            throw new CustomException("Username is already in use", HttpStatus.BAD_REQUEST);
+            throw new CustomException("Username is already in use", HttpStatus.NOT_ACCEPTABLE);
         }
         return user;
     }
@@ -88,15 +85,14 @@ public class UserService {
     }
 
     public User updateUser(User user) {
-        User updated = this.userRepo.findByUsername(user.getUsername());
-        updated.setFirstname(user.getFirstname());
-        updated.setLastname(user.getLastname());
-        updated.setEmail(user.getEmail());
-        updated.setRoles(user.getRoles());
-        return userRepo.save(updated);
+        if(userRepo.existsByUsername(user.getUsername())){
+            return userRepo.save(user);
+        }
+        else {
+            throw new CustomException("This user doesn't exist", HttpStatus.NOT_MODIFIED);
+        }
     }
 
-    @Transactional
     public void deleteUser(String username) {
         userRepo.deleteByUsername(username);
     }
