@@ -3,7 +3,7 @@ package com.riot.psycontrol.dao;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.List;
 
 @Data
 @Entity
@@ -19,7 +19,7 @@ public class Role {
     @JoinTable(name = "role_privilege",
             joinColumns = {@JoinColumn(name = "role_id")},
             inverseJoinColumns = {@JoinColumn(name = "privilege_id")})
-    private Collection<Privilege> privileges;
+    private List<Privilege> privileges;
 
 
 }

@@ -9,10 +9,9 @@ import javax.persistence.*;
 @Table(name = "privilege")
 public class Privilege {
     @Id
-    @Column(name = "privilege_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer privilege_id;
+    private Integer id;
 
-    @Column(name = "privilege_name")
+    @Column(name = "privilegename")
     private String privilegename;
 }

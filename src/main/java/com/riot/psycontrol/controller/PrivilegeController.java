@@ -14,13 +14,9 @@ public class PrivilegeController {
     @Autowired
     PrivilegeService privilegeService;
 
-    @GetMapping
+    @GetMapping("/all")
     public List<Privilege> getPrivilegesList(){
         return  privilegeService.getPrivileges();
     }
 
-    @PostMapping
-    public Privilege createPrivilege(@RequestBody Privilege privilege){
-        return privilegeService.createPrivilege(privilege);
-    }
 }

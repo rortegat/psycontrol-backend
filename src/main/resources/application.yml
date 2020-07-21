@@ -1,9 +1,9 @@
 spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/psycontrol_db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/psycontrol_db
     username: psycontrol_user
-    password: P4ssw0rd*
+    password:
   jpa:
     properties:
       dialect: org.hibernate.dialect.MySQL57InnoDBDialect

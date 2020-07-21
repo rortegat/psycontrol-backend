@@ -15,13 +15,23 @@ public class RoleController {
     RoleService roleService;
 
     @GetMapping("/all")
-    public List<Role> getRoles(){
+    public List<Role> getRoles() {
         return roleService.getRoles();
     }
 
     @PostMapping("/add")
-    public Role addRole(@RequestBody Role role){
+    public Role addRole(@RequestBody Role role) {
         return roleService.saveRole(role);
+    }
+
+    @PutMapping("/update")
+    public Role updateRole(@RequestBody Role role) {
+        return roleService.updateRole(role);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteRole(@PathVariable Integer id){
+        roleService.deleteRole(id);
     }
 
 }
