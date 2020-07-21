@@ -90,10 +90,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/users/login").permitAll()
                 .antMatchers("/users/signup").permitAll()
                 //.antMatchers("/users/**")
+                //.antMatchers("/roles/**")
+                //.antMatchers("/privileges/**")
                 //.antMatchers("/patients/**")
-                //.antMatchers("/files/**")
                 //.antMatchers("/consults/**")
-        .anyRequest().authenticated();
+                .antMatchers("/files/**").permitAll()
+        .anyRequest().authenticated()
         ;
 
         //http.apply(new JwtRequestFilterConfigurer(jwtProvider));

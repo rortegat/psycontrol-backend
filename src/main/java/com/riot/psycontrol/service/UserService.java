@@ -19,21 +19,27 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
 
-    @Autowired RoleService roleService;
+    @Autowired
+    RoleService roleService;
 
-    @Autowired UserRepo userRepo;
+    @Autowired
+    UserRepo userRepo;
 
-    @Autowired PasswordEncoder passwordEncoder;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
-    @Autowired JwtProvider jwtProvider;
+    @Autowired
+    JwtProvider jwtProvider;
 
-    @Autowired AuthenticationManager authenticationManager;
+    @Autowired
+    AuthenticationManager authenticationManager;
 
-    public List<User> getUsers(){
+    public List<User> getUsers() {
         return userRepo.findAll();
     }
 
@@ -73,28 +79,34 @@ public class UserService {
         return userRepo.findByUsername(username);
     }
 
-    public User saveUser(User user){
-        if(!userRepo.existsByUsername(user.getUsername())){
+    public User saveUser(User user) {
+        if (!userRepo.existsByUsername(user.getUsername())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userRepo.save(user);
+            return userRepo.save(user);
+        } else {
+            throw new CustomException("Username is already in use", HttpStatus.NOT_MODIFIED);
         }
-        else{
-            throw new CustomException("Username is already in use",HttpStatus.NOT_MODIFIED);
-        }
-        return user;
     }
 
     public User updateUser(User user) {
-        if(userRepo.existsByUsername(user.getUsername())){
-            return userRepo.save(user);
-        }
-        else {
+        User saved = userRepo.findByUsername(user.getUsername());
+        if (saved != null) {
+            saved.setFirstname(user.getFirstname());
+            saved.setLastname(user.getLastname());
+            saved.setEmail(user.getEmail());
+            saved.setRoles(user.getRoles());
+            return userRepo.save(saved);
+        } else {
             throw new CustomException("This user doesn't exist", HttpStatus.NOT_MODIFIED);
         }
     }
 
     public void deleteUser(String username) {
-        userRepo.deleteByUsername(username);
+        User user = userRepo.findByUsername(username);
+        if (user != null)
+            userRepo.delete(user);
+        else
+            throw new CustomException("User does not exist", HttpStatus.BAD_REQUEST);
     }
 
     public User whoAmI() {

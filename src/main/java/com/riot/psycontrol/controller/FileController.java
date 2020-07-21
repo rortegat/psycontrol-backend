@@ -9,6 +9,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,12 +29,14 @@ public class FileController {
     @Autowired
     UserService userService;
 
+    //@PreAuthorize("hasRole('user')")
     @PostMapping("/upload")
     public DaoFile uploadUserFile( @RequestParam("file") MultipartFile file) {
         String dirPath = rootDir + File.separator+userService.whoAmI().getUsername();
         return daoFileService.uploadFile(dirPath, file);
     }
 
+    //@PreAuthorize("hasRole('user')")
     @GetMapping("/all")
     public List<DaoFile> getAllUserFiles() {
         return daoFileService.getAllUserFiles(userService.whoAmI().getUsername());
@@ -52,6 +55,7 @@ public class FileController {
                 .body(resource);
     }
 
+    //@PreAuthorize("hasRole('user')")
     @DeleteMapping("/delete/{id}")
     public void deleteFile( @PathVariable String id) {
         daoFileService.deleteFile(id);

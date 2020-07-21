@@ -1,9 +1,9 @@
 spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/psycontroldb
-    username:
-    password:
+    url: jdbc:mysql://localhost:3306/psycontrol_db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: psycontrol_user
+    password: P4ssw0rd*
   jpa:
     properties:
       dialect: org.hibernate.dialect.MySQL57InnoDBDialect
@@ -17,8 +17,8 @@ spring:
 
 config:
   file:
-    #upload-dir: ${HOME}/Storage # For Linux filesystem
-    upload-dir: C:\\Storage # For Windows filesystem
+    upload-dir: ${HOME}/Storage # For Linux filesystem
+    #upload-dir: C:\\Storage # For Windows filesystem
   jwt:
     secretKey: SuperSecretKey
     validityInMilliseconds: 3600000 #60*60000 = 1Hour

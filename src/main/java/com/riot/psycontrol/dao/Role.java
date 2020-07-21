@@ -3,17 +3,23 @@ package com.riot.psycontrol.dao;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Data
 @Entity
-@Table(name="role")
+@Table(name = "role")
 public class Role {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name="rolename")
+    @Column(name = "rolename")
     private String rolename;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "role_privilege",
+            joinColumns = {@JoinColumn(name = "role_id")},
+            inverseJoinColumns = {@JoinColumn(name = "privilege_id")})
+    private Collection<Privilege> privileges;
 
 
 }
