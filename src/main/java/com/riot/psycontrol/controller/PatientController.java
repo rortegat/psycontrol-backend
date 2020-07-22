@@ -2,10 +2,12 @@ package com.riot.psycontrol.controller;
 
 import com.riot.psycontrol.dao.Patient;
 import com.riot.psycontrol.service.PatientService;
+import com.riot.psycontrol.service.UserService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -15,6 +17,8 @@ public class PatientController {
     @Autowired
     PatientService patientService;
 
+    @Autowired
+    UserService userService;
 
     @ApiOperation(value = "View a list of available patients", response = List.class)
     @ApiResponses(value = {
@@ -24,8 +28,9 @@ public class PatientController {
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     })
     @GetMapping("/all")
-    public List<Patient> listPatients(){
-        return patientService.getPatients();
+    public List<Patient> listPatients(Principal principal){
+        System.out.println(principal.getName());
+        return patientService.getPatients(userService.whoAmI().getUsername());
     }
 
     @GetMapping("/{id}")

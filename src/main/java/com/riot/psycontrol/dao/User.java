@@ -1,7 +1,9 @@
 package com.riot.psycontrol.dao;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +17,8 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name="user")
+@AllArgsConstructor
+@NoArgsConstructor
 public class User implements UserDetails {
 
     @Id
@@ -31,16 +35,12 @@ public class User implements UserDetails {
     @Column(name="email")
     private String email;
 
-
     @Column(name = "disabled")
     private boolean disabled;
-
     @Column(name = "account_locked")
     private boolean accountNonLocked;
-
     @Column(name = "account_expired")
     private boolean accountNonExpired;
-
     @Column(name = "credentials_expired")
     private boolean credentialsNonExpired;
 
