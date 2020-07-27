@@ -21,13 +21,9 @@ repositories {
 }
 
 dependencies {
-	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
 	compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
-	// https://mvnrepository.com/artifact/mysql/mysql-connector-java
 	//compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
-	// https://mvnrepository.com/artifact/io.springfox/springfox-swagger2
 	compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
-	// https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui
 	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
 	compile group: 'io.springfox', name : 'springfox-bean-validators', version:'2.9.2'
 

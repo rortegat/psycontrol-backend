@@ -14,6 +14,11 @@ public class RoleController {
     @Autowired
     RoleService roleService;
 
+    @GetMapping("/{id}")
+    public Role getRole(@PathVariable Integer id) {
+        return roleService.getRoleById(id);
+    }
+
     @GetMapping("/all")
     public List<Role> getRoles() {
         return roleService.getRoles();
@@ -30,7 +35,7 @@ public class RoleController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteRole(@PathVariable Integer id){
+    public void deleteRole(@PathVariable Integer id) {
         roleService.deleteRole(id);
     }
 

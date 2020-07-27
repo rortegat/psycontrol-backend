@@ -48,7 +48,7 @@ public class UserService {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setUsername(user.getUsername());
             user.setEmail(user.getEmail());
-            user.setRoles(Arrays.asList(roleService.getRole("DEMO")));
+            user.setRoles(Arrays.asList(roleService.getRoleByRolename("DEMO")));
             userRepo.save(user);
         } else {
             throw new CustomException("Username is already in use", HttpStatus.NOT_ACCEPTABLE);

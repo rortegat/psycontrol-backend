@@ -89,13 +89,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/users/login").permitAll()
                 .antMatchers("/users/signup").permitAll()
-                //.antMatchers("/users/**")
-                //.antMatchers("/roles/**")
-                //.antMatchers("/privileges/**")
-                //.antMatchers("/patients/**")
-                //.antMatchers("/consults/**")
+                .antMatchers("/users/**").authenticated()
+                .antMatchers("/roles/**").authenticated()
+                .antMatchers("/privileges/**").authenticated()
+                .antMatchers("/patients/**").authenticated()
+                .antMatchers("/consults/**").authenticated()
                 .antMatchers("/files/**").permitAll()
-        .anyRequest().authenticated()
+        //.anyRequest().authenticated()
         ;
 
         //http.apply(new JwtRequestFilterConfigurer(jwtProvider));
