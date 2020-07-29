@@ -94,7 +94,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/privileges/**").authenticated()
                 .antMatchers("/patients/**").authenticated()
                 .antMatchers("/consults/**").authenticated()
-                .antMatchers("/files/**").permitAll()
+                .antMatchers("/files/**").authenticated()
         //.anyRequest().authenticated()
         ;
 

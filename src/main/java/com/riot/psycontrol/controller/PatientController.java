@@ -17,9 +17,6 @@ public class PatientController {
     @Autowired
     PatientService patientService;
 
-    @Autowired
-    UserService userService;
-
     @ApiOperation(value = "View a list of available patients", response = List.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved list"),
@@ -29,8 +26,7 @@ public class PatientController {
     })
     @GetMapping("/all")
     public List<Patient> listPatients(Principal principal){
-        System.out.println(principal.getName());
-        return patientService.getPatients(userService.whoAmI().getUsername());
+        return patientService.getPatients(principal.getName());
     }
 
     @GetMapping("/{id}")
