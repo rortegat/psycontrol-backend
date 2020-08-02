@@ -1,7 +1,6 @@
 package com.riot.psycontrol.controller;
 
 import com.riot.psycontrol.dto.PatientDTO;
-import com.riot.psycontrol.entity.Patient;
 import com.riot.psycontrol.service.PatientService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ public class PatientController {
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     })
     @GetMapping("/all")
-    public List<Patient> listPatients(Principal principal){
+    public List<PatientDTO> listPatients(Principal principal){
         return patientService.getPatients(principal.getName());
     }
 
@@ -35,12 +34,12 @@ public class PatientController {
     }
 
     @PostMapping("/add")
-    public Patient addPatient(@RequestBody Patient patient){
+    public PatientDTO addPatient(@RequestBody PatientDTO patient){
         return patientService.savePatient(patient);
     }
 
     @PutMapping("/update")
-    public Patient updatePatient(@RequestBody Patient patient){
+    public PatientDTO updatePatient(@RequestBody PatientDTO patient){
         return patientService.updatePatient(patient);
     }
 

@@ -36,9 +36,9 @@ public class Patient extends Auditable<String> {
     @Column(name="mobile")
     private String mobile;
 
-    @ManyToOne
+    /*@ManyToOne
     @JoinColumn(name="user_id")
-    private User user;
+    private User user;*/
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy="patient")
     private Set<Consult> consults = new HashSet<Consult>();

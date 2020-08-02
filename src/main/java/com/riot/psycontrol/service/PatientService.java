@@ -21,36 +21,41 @@ public class PatientService {
     @Autowired
     PatientRepo patientRepo;
 
-    @Autowired
-    UserService userService;
-
-    public List<Patient> getPatients(String username) {
-        if (username != null)
-            return patientRepo.findAllByCreatedBy(username);
-        else
+    public List<PatientDTO> getPatients(String username) {
+        if (username != null) {
+            var patients = patientRepo.findAllByCreatedBy(username);
+            return patients.stream()
+                    .map(patient->modelMapper.map(patient,PatientDTO.class))
+                    .collect(Collectors.toList());
+        }else
             throw new CustomException("There is no username", HttpStatus.BAD_REQUEST);
     }
 
     public PatientDTO getPatientById(Integer id) {
         var patient = patientRepo.findById(id);
         if (patient.isPresent())
-            return modelMapper.map(patient, PatientDTO.class);
+            return modelMapper.map(patient.get(), PatientDTO.class);
         else
             throw new CustomException("This patient does not exist", HttpStatus.BAD_REQUEST);
     }
 
-    public Patient savePatient(Patient patient) {
-        return patientRepo.save(patient);
+    public PatientDTO savePatient(PatientDTO patientDTO) {
+        var patient = modelMapper.map(patientDTO, Patient.class);
+        return modelMapper.map(patientRepo.save(patient),PatientDTO.class);
     }
 
-    public Patient updatePatient(Patient patient) {
-        Patient updated = patientRepo.findById(patient.getId()).get();
-        updated.setFirstname(patient.getFirstname());
-        updated.setLastname(patient.getLastname());
-        updated.setEmail(patient.getEmail());
-        updated.setPhone(patient.getPhone());
-        updated.setMobile(patient.getMobile());
-        return patientRepo.save(updated);
+    public PatientDTO updatePatient(PatientDTO patientDTO) {
+        var patient = patientRepo.findById(patientDTO.getId());
+        if(patient.isPresent()) {
+            var updated = patient.get();
+            updated.setFirstname(patientDTO.getFirstname());
+            updated.setLastname(patientDTO.getLastname());
+            updated.setEmail(patientDTO.getEmail());
+            updated.setPhone(patientDTO.getPhone());
+            updated.setMobile(patientDTO.getMobile());
+            return modelMapper.map(patientRepo.save(updated),PatientDTO.class);
+        }else
+            throw new CustomException("This patient does not exist", HttpStatus.BAD_REQUEST);
     }
 
     public void removePatient(Integer id) {
