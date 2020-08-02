@@ -1,6 +1,6 @@
 package com.riot.psycontrol.security.jwt;
 
-import com.riot.psycontrol.dao.Role;
+import com.riot.psycontrol.entity.Role;
 import com.riot.psycontrol.security.CustomException;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;

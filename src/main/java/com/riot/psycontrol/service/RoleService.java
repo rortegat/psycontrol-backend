@@ -1,6 +1,6 @@
 package com.riot.psycontrol.service;
 
-import com.riot.psycontrol.dao.Role;
+import com.riot.psycontrol.entity.Role;
 import com.riot.psycontrol.repo.RoleRepo;
 import com.riot.psycontrol.security.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;

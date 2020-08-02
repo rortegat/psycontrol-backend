@@ -1,6 +1,6 @@
 package com.riot.psycontrol.model;
 
-import com.riot.psycontrol.dao.Role;
+import com.riot.psycontrol.entity.Role;
 import lombok.Data;
 
 import java.util.List;

@@ -1,8 +1,8 @@
 package com.riot.psycontrol.controller;
 
-import com.riot.psycontrol.dao.Patient;
+import com.riot.psycontrol.dto.PatientDTO;
+import com.riot.psycontrol.entity.Patient;
 import com.riot.psycontrol.service.PatientService;
-import com.riot.psycontrol.service.UserService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +30,7 @@ public class PatientController {
     }
 
     @GetMapping("/{id}")
-    public Patient getPatient(@PathVariable Integer id){
+    public PatientDTO getPatient(@PathVariable Integer id){
         return patientService.getPatientById(id);
     }
 

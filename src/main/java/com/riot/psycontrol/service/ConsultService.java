@@ -1,7 +1,7 @@
 package com.riot.psycontrol.service;
 
-import com.riot.psycontrol.dao.Consult;
-import com.riot.psycontrol.dao.Patient;
+import com.riot.psycontrol.entity.Consult;
+import com.riot.psycontrol.entity.Patient;
 import com.riot.psycontrol.repo.ConsultRepo;
 import com.riot.psycontrol.repo.PatientRepo;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.riot.psycontrol.dao;
+package com.riot.psycontrol.entity;
 
 import lombok.Data;
 import org.springframework.data.annotation.CreatedBy;

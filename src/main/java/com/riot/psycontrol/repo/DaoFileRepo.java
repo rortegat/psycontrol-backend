@@ -1,6 +1,6 @@
 package com.riot.psycontrol.repo;
 
-import com.riot.psycontrol.dao.DaoFile;
+import com.riot.psycontrol.entity.DaoFile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

@@ -1,6 +1,6 @@
 package com.riot.psycontrol.service;
 
-import com.riot.psycontrol.dao.User;
+import com.riot.psycontrol.entity.User;
 import com.riot.psycontrol.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AccountStatusUserDetailsChecker;

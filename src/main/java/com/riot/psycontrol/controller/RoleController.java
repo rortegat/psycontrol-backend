@@ -1,6 +1,6 @@
 package com.riot.psycontrol.controller;
 
-import com.riot.psycontrol.dao.Role;
+import com.riot.psycontrol.entity.Role;
 import com.riot.psycontrol.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

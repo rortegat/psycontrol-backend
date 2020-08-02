@@ -1,6 +1,5 @@
-package com.riot.psycontrol.dao;
+package com.riot.psycontrol.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -15,7 +14,6 @@ import java.util.Set;
 @Table(name="patient")
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties({"user","consults"})
 public class Patient extends Auditable<String> {
 
     @Id

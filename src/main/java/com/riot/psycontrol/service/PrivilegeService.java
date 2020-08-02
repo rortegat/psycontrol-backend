@@ -1,6 +1,6 @@
 package com.riot.psycontrol.service;
 
-import com.riot.psycontrol.dao.Privilege;
+import com.riot.psycontrol.entity.Privilege;
 import com.riot.psycontrol.repo.PrivilegeRepo;
 import com.riot.psycontrol.security.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PrivilegeService {

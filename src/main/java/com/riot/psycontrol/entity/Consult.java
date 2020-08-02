@@ -1,4 +1,4 @@
-package com.riot.psycontrol.dao;
+package com.riot.psycontrol.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -9,9 +9,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 
 @Data
-@EqualsAndHashCode(exclude = {"patient"})
-@ToString(exclude={"patient"})
-@JsonIgnoreProperties({"patient"})
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name="consult")

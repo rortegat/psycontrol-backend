@@ -1,6 +1,5 @@
-package com.riot.psycontrol.dao;
+package com.riot.psycontrol.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

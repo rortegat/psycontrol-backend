@@ -1,7 +1,7 @@
 package com.riot.psycontrol.service;
 
-import com.riot.psycontrol.dao.Patient;
-import com.riot.psycontrol.dao.User;
+import com.riot.psycontrol.entity.Patient;
+import com.riot.psycontrol.entity.User;
 import com.riot.psycontrol.repo.PatientRepo;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;

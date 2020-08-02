@@ -1,6 +1,6 @@
 package com.riot.psycontrol.repo;
 
-import com.riot.psycontrol.dao.Consult;
+import com.riot.psycontrol.entity.Consult;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -1,6 +1,6 @@
 package com.riot.psycontrol.controller;
 
-import com.riot.psycontrol.dao.DaoFile;
+import com.riot.psycontrol.entity.DaoFile;
 import com.riot.psycontrol.service.DaoFileService;
 import com.riot.psycontrol.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 

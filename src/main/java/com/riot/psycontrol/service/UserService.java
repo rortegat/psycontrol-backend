@@ -1,6 +1,6 @@
 package com.riot.psycontrol.service;
 
-import com.riot.psycontrol.dao.User;
+import com.riot.psycontrol.entity.User;
 import com.riot.psycontrol.repo.UserRepo;
 import com.riot.psycontrol.model.AuthenticationResponse;
 import com.riot.psycontrol.security.CustomException;
@@ -16,10 +16,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {

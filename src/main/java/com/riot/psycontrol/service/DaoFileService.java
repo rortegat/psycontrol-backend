@@ -1,6 +1,6 @@
 package com.riot.psycontrol.service;
 
-import com.riot.psycontrol.dao.DaoFile;
+import com.riot.psycontrol.entity.DaoFile;
 import com.riot.psycontrol.repo.DaoFileRepo;
 import com.riot.psycontrol.security.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
