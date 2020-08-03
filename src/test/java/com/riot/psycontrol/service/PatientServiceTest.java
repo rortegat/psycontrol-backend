@@ -8,11 +8,14 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.modelmapper.ModelMapper;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -25,8 +28,11 @@ class PatientServiceTest {
     private static User user;
     private static Patient patient1;
     private static Patient patient2;
-    private static PatientDTO patientDTO1;
-    private static PatientDTO patientDTO2;
+    private static PatientDTO patientDTO;
+    private static ModelMapper modelMapper;
+
+    @Mock
+    private ModelMapper mapper;
 
     @Mock
     private PatientRepo patientRepo;
@@ -36,11 +42,11 @@ class PatientServiceTest {
 
     @BeforeAll
     static void setUp() {
+        modelMapper = new ModelMapper();
         user = new User();
         patient1 = new Patient();
         patient2 = new Patient();
-        patientDTO1 = new PatientDTO(1,"Jonh","Doe","john@algo.com","5512345678","5512345678");
-        patientDTO2 = new PatientDTO(2,"Alfred","Flowers","alfred@algo.com","5512345678","5513246578");
+        patientDTO = new PatientDTO(1, "John", "Doe", "john@algo.com", "5512345678", "5512345678");
 
         user.setId(1);
         user.setUsername("test");
@@ -49,12 +55,14 @@ class PatientServiceTest {
         patient1.setFirstname("John");
         patient1.setLastname("Doe");
         patient1.setEmail("john@algo.com");
+        patient1.setMobile("5512346578");
         patient1.setCreatedBy(user.getUsername());
 
         patient2.setId(2);
         patient2.setFirstname("Alfred");
         patient2.setLastname("Flowers");
         patient2.setEmail("alfred@algo.com");
+        patient2.setMobile("5512346578");
         patient2.setCreatedBy(user.getUsername());
     }
 
@@ -65,6 +73,8 @@ class PatientServiceTest {
         patients.add(patient1);
         patients.add(patient2);
         //given
+        when(mapper.map(any(Patient.class), eq(PatientDTO.class)))
+                .thenAnswer(invocation -> modelMapper.map(invocation.getArgument(0), invocation.getArgument(1)));
         when(patientRepo.findAllByCreatedBy(anyString())).thenReturn(patients);
         //when
         var result = patientService.getPatients(user.getUsername());
@@ -77,6 +87,10 @@ class PatientServiceTest {
     @Test
     void getPatientById_returnsFoundPatient() {
         //given
+        when(mapper.map(any(), any())).thenAnswer(invocation -> {
+            Arrays.stream(invocation.getArguments()).forEach(System.out::println);
+            return modelMapper.map(invocation.getArgument(0), invocation.getArgument(1));
+        });
         when(patientRepo.findById(anyInt())).thenReturn(Optional.of(patient1));
         //when
         var result = patientService.getPatientById(1);
@@ -90,9 +104,11 @@ class PatientServiceTest {
     void savePatient_returnsSavedPatient() {
         System.out.println("SAVE_PATIENT");
         //given
+        when(mapper.map(any(), any())).thenAnswer(invocation ->
+                modelMapper.map(invocation.getArgument(0),invocation.getArgument(1)));
         when(patientRepo.save(any(Patient.class))).thenAnswer(i -> i.getArgument(0));
         //when
-        var result = patientService.savePatient(patientDTO1);
+        var result = patientService.savePatient(patientDTO);
         //then
         verify(patientRepo).save(any(Patient.class));
         assertEquals("John", result.getFirstname());
@@ -102,23 +118,18 @@ class PatientServiceTest {
     @Test
     void updatePatient_returnsUpdatedPatient() {
         System.out.println("UPDATE_PATIENT");
-        var update = new PatientDTO();
-        update.setId(1);
-        update.setFirstname("Antony");
-        update.setLastname("Smith");
-        update.setEmail("antony@algo.com");
-        update.setPhone("5598765432");
-        update.setMobile("5587654321");
-
+        var update = new PatientDTO(1, "Antony", "Smith", "antony@algo.com", "5512345678", "5512345678");
         //given
+        when(mapper.map(any(), any())).thenAnswer(invocation ->
+                modelMapper.map(invocation.getArgument(0),invocation.getArgument(1)));
         when(patientRepo.findById(anyInt())).thenReturn(Optional.of(patient1));
         when(patientRepo.save(any(Patient.class))).thenAnswer(i -> i.getArgument(0));
         //when
-        //PatientDTO result = patientService.updatePatient(update);
+        PatientDTO result = patientService.updatePatient(update);
         //then
-        //verify(patientRepo).findById(anyInt());
-        //verify(patientRepo).save(any(Patient.class));
-        //assertEquals("Antony", result.getFirstname());
+        verify(patientRepo).findById(anyInt());
+        verify(patientRepo).save(any(Patient.class));
+        assertEquals("Antony", result.getFirstname());
     }
 
     @Order(5)
