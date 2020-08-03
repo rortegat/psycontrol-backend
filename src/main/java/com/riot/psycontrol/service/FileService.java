@@ -1,8 +1,10 @@
 package com.riot.psycontrol.service;
 
-import com.riot.psycontrol.entity.DaoFile;
-import com.riot.psycontrol.repo.DaoFileRepo;
+import com.riot.psycontrol.dto.FileDTO;
+import com.riot.psycontrol.entity.FileEntity;
+import com.riot.psycontrol.repo.FileRepo;
 import com.riot.psycontrol.security.CustomException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,31 +23,36 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
-public class DaoFileService {
+public class FileService {
 
     @Autowired
-    private DaoFileRepo DaoFileRepo;
+    private FileRepo fileRepo;
 
-    public List<DaoFile> getAllUserFiles(String username) {
-        return DaoFileRepo.findByCreatedBy(username);
+    @Autowired
+    private ModelMapper modelMapper;
+
+    public List<FileDTO> getAllUserFiles(@NotNull String username) {
+        var files = fileRepo.findByCreatedBy(username);
+        return files.stream()
+                .map(fileEntity -> modelMapper.map(fileEntity, FileDTO.class))
+                .collect(Collectors.toList());
     }
 
 
-    public DaoFile getById(String id) {
-        Optional<DaoFile> file = DaoFileRepo.findById(id);
+    public FileEntity getById(@NotNull String id) {
+        var file = fileRepo.findById(id);
         if (file.isPresent())
             return file.get();
         else throw new CustomException("This file doesn't exist", HttpStatus.BAD_REQUEST);
     }
 
-    public DaoFile uploadFile(String path, MultipartFile file) {
+    public FileDTO uploadFile(@NotNull String path,@NotNull MultipartFile file) {
         File folder = new File(path);
-
         if (!folder.isDirectory()) {
             try {
                 Files.createDirectory(folder.toPath()).toFile();
@@ -57,7 +65,6 @@ public class DaoFileService {
             if (ele.equals(file.getOriginalFilename()))
                 throw new CustomException("This file already exist", HttpStatus.NOT_MODIFIED);
         }
-
 
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         Path filePath = Paths.get(path);
@@ -74,24 +81,24 @@ public class DaoFileService {
                 Files.copy(inputStream,
                         filePath.resolve(filename),
                         StandardCopyOption.REPLACE_EXISTING);
-                DaoFile nuevo = new DaoFile(
+                var nuevo = new FileEntity(
                         UUID.randomUUID().toString(),
                         file.getOriginalFilename(),
                         file.getContentType(),
                         file.getSize(),
                         filePath.toString());
-                return DaoFileRepo.save(nuevo);
+                return modelMapper.map(fileRepo.save(nuevo), FileDTO.class);
             }
         } catch (IOException e) {
             throw new CustomException("Failed to store file " + filename, HttpStatus.NOT_MODIFIED);
         }
     }
 
-    public void deleteFile(String id) {
-        Optional<DaoFile> file = DaoFileRepo.findById(id);
+    public void deleteFile(@NotNull String id) {
+        var file = fileRepo.findById(id);
         if (file.isPresent()) {
             if (getFile(file.get().getPath(), file.get().getFilename()).delete())
-                DaoFileRepo.delete(file.get());
+                fileRepo.delete(file.get());
             else throw new CustomException("Could not delete file", HttpStatus.NOT_MODIFIED);
         } else {
             throw new CustomException("This file does not exist", HttpStatus.BAD_REQUEST);
@@ -99,16 +106,16 @@ public class DaoFileService {
     }
 
     //Retrieves file from directory
-    public File getFile(String path, String filename) {
+    public File getFile(@NotNull String path,@NotNull String filename) {
         return new File(path + File.separator + filename);
     }
 
-    public Path getPath(String filePath, String filename) {
+    public Path getPath(@NotNull String filePath,@NotNull String filename) {
         Path rootLocation = Paths.get(filePath);
         return rootLocation.resolve(filename);
     }
 
-    public Stream<Path> getDirectoryFiles(String directoryPath) {
+    public Stream<Path> getDirectoryFiles(@NotNull String directoryPath) {
         Path rootLocation = Paths.get(directoryPath);
         try {
             return Files.walk(rootLocation, 1)
@@ -119,7 +126,7 @@ public class DaoFileService {
         }
     }
 
-    public Resource getResource(String filePath, String filename) {
+    public Resource getResource(@NotNull String filePath,@NotNull String filename) {
         try {
             Path path = getPath(filePath, filename);
             Resource resource = new UrlResource(path.toUri());

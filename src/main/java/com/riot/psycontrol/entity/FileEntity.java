@@ -13,7 +13,7 @@ import javax.persistence.*;
 @EntityListeners(AuditingEntityListener.class)
 @AllArgsConstructor
 @NoArgsConstructor
-public class DaoFile extends Auditable<String> {
+public class FileEntity extends Auditable<String> {
 
     @Id
     @Column

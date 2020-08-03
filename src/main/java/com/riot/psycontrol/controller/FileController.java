@@ -1,18 +1,19 @@
 package com.riot.psycontrol.controller;
 
-import com.riot.psycontrol.entity.DaoFile;
-import com.riot.psycontrol.service.DaoFileService;
-import com.riot.psycontrol.service.UserService;
+import com.riot.psycontrol.dto.FileDTO;
+import com.riot.psycontrol.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -20,31 +21,28 @@ import java.util.List;
 public class FileController {
 
     @Value("${config.file.upload-dir}")
-    public String rootDir;
+    private String rootDir;
 
     @Autowired
-    DaoFileService daoFileService;
+    private FileService fileService;
 
-    @Autowired
-    UserService userService;
-
-    //@PreAuthorize("hasRole('user')")
+    @PreAuthorize("hasRole('admin')")
     @PostMapping("/upload")
-    public DaoFile uploadUserFile( @RequestParam("file") MultipartFile file) {
-        String dirPath = rootDir + File.separator+userService.whoAmI().getUsername();
-        return daoFileService.uploadFile(dirPath, file);
+    public FileDTO uploadUserFile(@RequestParam("file") MultipartFile file, Principal principal) {
+        String dirPath = rootDir + File.separator+principal.getName();
+        return fileService.uploadFile(dirPath, file);
     }
 
-    //@PreAuthorize("hasRole('user')")
+    @PreAuthorize("hasRole('admin')")
     @GetMapping("/all")
-    public List<DaoFile> getAllUserFiles() {
-        return daoFileService.getAllUserFiles(userService.whoAmI().getUsername());
+    public List<FileDTO> getAllUserFiles(Principal principal){
+        return fileService.getAllUserFiles(principal.getName());
     }
 
     @GetMapping("/preview/{id}")
     public ResponseEntity<Resource> getImageAsset(@PathVariable String id) {
-        DaoFile file = daoFileService.getById(id);
-        Resource resource = daoFileService.getResource(file.getPath(), file.getFilename());
+        var file = fileService.getById(id);
+        Resource resource = fileService.getResource(file.getPath(), file.getFilename());
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.parseMediaType(file.getContentType()))
@@ -54,9 +52,9 @@ public class FileController {
                 .body(resource);
     }
 
-    //@PreAuthorize("hasRole('user')")
+    @PreAuthorize("hasRole('admin')")
     @DeleteMapping("/delete/{id}")
     public void deleteFile( @PathVariable String id) {
-        daoFileService.deleteFile(id);
+        fileService.deleteFile(id);
     }
 }
