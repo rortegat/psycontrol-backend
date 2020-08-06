@@ -4,6 +4,8 @@ import com.riot.psycontrol.dto.PatientDTO;
 import com.riot.psycontrol.service.PatientService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -24,8 +26,8 @@ public class PatientController {
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     })
     @GetMapping("/all")
-    public List<PatientDTO> listPatients(Principal principal){
-        return patientService.getPatients(principal.getName());
+    public Page<PatientDTO> listPatients(Pageable pageable, Principal principal){
+        return patientService.getPagePatients(pageable, principal.getName());
     }
 
     @GetMapping("/{id}")

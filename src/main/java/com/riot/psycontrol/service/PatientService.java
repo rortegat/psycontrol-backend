@@ -6,6 +6,8 @@ import com.riot.psycontrol.repo.PatientRepo;
 import com.riot.psycontrol.security.CustomException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -22,25 +24,27 @@ public class PatientService {
     @Autowired
     PatientRepo patientRepo;
 
-    public List<PatientDTO> getPatients(String username) {
-        if (username != null) {
-            var patients = patientRepo.findAllByCreatedBy(username);
-            return patients.stream()
-                    .map(patient -> modelMapper.map(patient, PatientDTO.class))
-                    .collect(Collectors.toList());
-        } else
-            throw new CustomException("There is no username", HttpStatus.BAD_REQUEST);
+    public List<PatientDTO> getPatients(@NotNull String username) {
+        var patients = patientRepo.findAllByCreatedBy(username);
+        return patients.stream()
+                .map(patient -> modelMapper.map(patient, PatientDTO.class))
+                .collect(Collectors.toList());
     }
 
-    public PatientDTO getPatientById(Integer id) {
+    public Page<PatientDTO> getPagePatients(@NotNull Pageable pageable, @NotNull String username) {
+        var page = patientRepo.findAllByCreatedBy(pageable, username);
+        return page.map(patient -> modelMapper.map(patient, PatientDTO.class));
+    }
+
+    public PatientDTO getPatientById(@NotNull Integer id) {
         var patient = patientRepo.findById(id);
         if (patient.isPresent())
             return modelMapper.map(patient.get(), PatientDTO.class);
-        else
+        else  
             throw new CustomException("This patient does not exist", HttpStatus.BAD_REQUEST);
     }
 
-    public PatientDTO savePatient(PatientDTO patientDTO) {
+    public PatientDTO savePatient(@NotNull PatientDTO patientDTO) {
         var patient = modelMapper.map(patientDTO, Patient.class);
         return modelMapper.map(patientRepo.save(patient), PatientDTO.class);
     }
@@ -59,7 +63,7 @@ public class PatientService {
             throw new CustomException("This patient does not exist", HttpStatus.BAD_REQUEST);
     }
 
-    public void removePatient(Integer id) {
+    public void removePatient(@NotNull Integer id) {
         var found = patientRepo.findById(id);
         if (found.isPresent())
             patientRepo.delete(found.get());

@@ -26,14 +26,14 @@ public class FileController {
     @Autowired
     private FileService fileService;
 
-    @PreAuthorize("hasRole('admin')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/upload")
     public FileDTO uploadUserFile(@RequestParam("file") MultipartFile file, Principal principal) {
         String dirPath = rootDir + File.separator+principal.getName();
         return fileService.uploadFile(dirPath, file);
     }
 
-    @PreAuthorize("hasRole('admin')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/all")
     public List<FileDTO> getAllUserFiles(Principal principal){
         return fileService.getAllUserFiles(principal.getName());
@@ -52,7 +52,7 @@ public class FileController {
                 .body(resource);
     }
 
-    @PreAuthorize("hasRole('admin')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public void deleteFile( @PathVariable String id) {
         fileService.deleteFile(id);

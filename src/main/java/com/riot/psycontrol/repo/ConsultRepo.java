@@ -10,12 +10,5 @@ import java.util.List;
 
 @Repository
 public interface ConsultRepo extends JpaRepository<Consult, Integer> {
-
-    @Query(value = "SELECT * FROM consult WHERE patient_id = :id",
-    nativeQuery = true)
-
-    List<Consult> getConsultsByPatientId(@Param("id") Integer id);
-
-    Consult getConsultById(Integer id);
-
+    List<Consult> findByPatientId(Integer id);
 }

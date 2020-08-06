@@ -17,8 +17,8 @@ spring:
 
 config:
   file:
-    upload-dir: /storage #For Docker container volume
-    #upload-dir: ${HOME}/storage #For non root Linux filesystem
+    #upload-dir: /storage #For Docker container volume
+    upload-dir: ${HOME}/storage #For non root Linux filesystem
     #upload-dir: C:\\storage # For Windows filesystem
   jwt:
     secretKey: SuperSecreto

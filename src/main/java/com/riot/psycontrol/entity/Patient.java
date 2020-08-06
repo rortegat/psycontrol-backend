@@ -40,8 +40,8 @@ public class Patient extends Auditable<String> {
     @JoinColumn(name="user_id")
     private User user;*/
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="patient")
-    private Set<Consult> consults = new HashSet<Consult>();
+    /*@OneToMany(fetch = FetchType.LAZY, mappedBy="patient")
+    private Set<Consult> consults = new HashSet<Consult>();*/
 
 
 }

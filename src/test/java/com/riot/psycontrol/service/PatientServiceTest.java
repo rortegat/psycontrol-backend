@@ -1,5 +1,6 @@
 package com.riot.psycontrol.service;
 
+import com.riot.psycontrol.PsyControlApplication;
 import com.riot.psycontrol.dto.PatientDTO;
 import com.riot.psycontrol.entity.Patient;
 import com.riot.psycontrol.entity.User;
@@ -9,6 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
@@ -24,6 +27,8 @@ import static org.mockito.Mockito.*;
 @ExtendWith(SpringExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class PatientServiceTest {
+
+    private static Logger LOG = LoggerFactory.getLogger(PsyControlApplication.class);
 
     private static User user;
     private static Patient patient1;
@@ -69,6 +74,7 @@ class PatientServiceTest {
     @Order(1)
     @Test
     void getPatients_returnsPatientsList() {
+        LOG.info("GET PATIENTS");
         List<Patient> patients = new ArrayList<>();
         patients.add(patient1);
         patients.add(patient2);
@@ -86,6 +92,7 @@ class PatientServiceTest {
     @Order(2)
     @Test
     void getPatientById_returnsFoundPatient() {
+        LOG.info("GET PATIENT BY ID");
         //given
         when(mapper.map(any(), any())).thenAnswer(invocation -> {
             Arrays.stream(invocation.getArguments()).forEach(System.out::println);
@@ -102,7 +109,7 @@ class PatientServiceTest {
     @Order(3)
     @Test
     void savePatient_returnsSavedPatient() {
-        System.out.println("SAVE_PATIENT");
+        LOG.info("SAVE_PATIENT");
         //given
         when(mapper.map(any(), any())).thenAnswer(invocation ->
                 modelMapper.map(invocation.getArgument(0),invocation.getArgument(1)));
@@ -117,7 +124,7 @@ class PatientServiceTest {
     @Order(4)
     @Test
     void updatePatient_returnsUpdatedPatient() {
-        System.out.println("UPDATE_PATIENT");
+        LOG.info("UPDATE_PATIENT");
         var update = new PatientDTO(1, "Antony", "Smith", "antony@algo.com", "5512345678", "5512345678");
         //given
         when(mapper.map(any(), any())).thenAnswer(invocation ->
@@ -135,6 +142,7 @@ class PatientServiceTest {
     @Order(5)
     @Test
     void removePatient_verifyDelete() {
+        LOG.info("REMOVE PATIENT");
         //given
         when(patientRepo.findById(anyInt())).thenReturn(Optional.of(patient1)).thenReturn(null);
         doNothing().when(patientRepo).delete(any(Patient.class));

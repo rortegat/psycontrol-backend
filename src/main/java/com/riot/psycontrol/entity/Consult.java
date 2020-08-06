@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -20,9 +21,11 @@ public class Consult extends Auditable<String> {
     private String reason;
     @Column(name="description")
     private String description;
+    @Column(name="patient_id")
+    private Integer patientId;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    /*@ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
-    private Patient patient;
+    private Patient patient;*/
 
 }

@@ -1,5 +1,6 @@
 package com.riot.psycontrol.controller;
 
+import com.riot.psycontrol.dto.ConsultDTO;
 import com.riot.psycontrol.entity.Consult;
 import com.riot.psycontrol.service.ConsultService;
 import com.riot.psycontrol.service.PatientService;
@@ -20,28 +21,27 @@ public class ConsultController {
     PatientService patientService;
 
     @GetMapping("/patient/{id}")
-    public List<Consult> listConsults(@PathVariable Integer id){
+    public List<ConsultDTO> listConsults(@PathVariable Integer id) {
         return consultService.getConsultsByPatientId(id);
     }
 
     @GetMapping("/{id}")
-    public Consult getConsult(@PathVariable Integer id){
+    public ConsultDTO getConsult(@PathVariable Integer id) {
         return consultService.getConsult(id);
     }
 
-    @PostMapping("/add/{patientId}")
-    public Consult addConsult(@PathVariable Integer patientId, @RequestBody Consult consult){
-        return consultService.saveConsult(patientId, consult);
+    @PostMapping("/add")
+    public ConsultDTO addConsult(@RequestBody ConsultDTO consultDTO) {
+        return consultService.saveConsult(consultDTO);
     }
 
     @PutMapping("/update")
-    public Consult updateConsult(@RequestBody Consult consult){
-        return consultService.updateConsult(consult);
+    public ConsultDTO updateConsult(@RequestBody ConsultDTO consultDTO) {
+        return consultService.updateConsult(consultDTO);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> removeConsult(@PathVariable Integer id){
+    public void deleteConsult(@PathVariable Integer id) {
         consultService.deleteConsult(id);
-        return ResponseEntity.ok("Deleted");
     }
 }
