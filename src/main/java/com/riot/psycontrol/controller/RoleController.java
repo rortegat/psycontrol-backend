@@ -1,5 +1,6 @@
 package com.riot.psycontrol.controller;
 
+import com.riot.psycontrol.dto.RoleDTO;
 import com.riot.psycontrol.entity.Role;
 import com.riot.psycontrol.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,22 +16,22 @@ public class RoleController {
     RoleService roleService;
 
     @GetMapping("/{id}")
-    public Role getRole(@PathVariable Integer id) {
+    public RoleDTO getRole(@PathVariable Integer id) {
         return roleService.getRoleById(id);
     }
 
     @GetMapping("/all")
-    public List<Role> getRoles() {
+    public List<RoleDTO> getRoles() {
         return roleService.getRoles();
     }
 
     @PostMapping("/add")
-    public Role addRole(@RequestBody Role role) {
+    public RoleDTO addRole(@RequestBody RoleDTO role) {
         return roleService.saveRole(role);
     }
 
     @PutMapping("/update")
-    public Role updateRole(@RequestBody Role role) {
+    public RoleDTO updateRole(@RequestBody RoleDTO role) {
         return roleService.updateRole(role);
     }
 

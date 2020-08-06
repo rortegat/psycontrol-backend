@@ -2,7 +2,6 @@ package com.riot.psycontrol.service;
 
 import com.riot.psycontrol.dto.ConsultDTO;
 import com.riot.psycontrol.entity.Consult;
-import com.riot.psycontrol.entity.Patient;
 import com.riot.psycontrol.repo.ConsultRepo;
 import com.riot.psycontrol.repo.PatientRepo;
 import com.riot.psycontrol.security.CustomException;

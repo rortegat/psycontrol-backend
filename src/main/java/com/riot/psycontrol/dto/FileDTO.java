@@ -2,8 +2,6 @@ package com.riot.psycontrol.dto;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-
 @Data
 public class FileDTO {
 

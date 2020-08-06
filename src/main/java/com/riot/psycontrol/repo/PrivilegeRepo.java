@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PrivilegeRepo extends JpaRepository<Privilege, Integer> {
+    Privilege findByPrivilegename(String privilegename);
 }

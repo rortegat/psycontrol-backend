@@ -1,6 +1,7 @@
 package com.riot.psycontrol.service;
 
 import com.riot.psycontrol.entity.User;
+import com.riot.psycontrol.repo.RoleRepo;
 import com.riot.psycontrol.repo.UserRepo;
 import com.riot.psycontrol.model.AuthenticationResponse;
 import com.riot.psycontrol.security.CustomException;
@@ -23,7 +24,7 @@ import java.util.List;
 public class UserService {
 
     @Autowired
-    RoleService roleService;
+    RoleRepo roleRepo;
 
     @Autowired
     UserRepo userRepo;
@@ -46,7 +47,7 @@ public class UserService {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setUsername(user.getUsername());
             user.setEmail(user.getEmail());
-            user.setRoles(Arrays.asList(roleService.getRoleByRolename("DEMO")));
+            user.setRoles(Arrays.asList(roleRepo.findByRolename("DEMO")));
             userRepo.save(user);
         } else {
             throw new CustomException("Username is already in use", HttpStatus.NOT_ACCEPTABLE);
