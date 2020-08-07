@@ -12,10 +12,11 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
-@Table(name="user")
+@Table(name = "user")
 @AllArgsConstructor
 @NoArgsConstructor
 public class User implements UserDetails {
@@ -23,15 +24,15 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name="username")
+    @Column(name = "username", unique = true)
     private String username;
-    @Column(name="password")
+    @Column(name = "password")
     private String password;
     @Column(name = "firstname")
     private String firstname;
     @Column(name = "lastname")
     private String lastname;
-    @Column(name="email")
+    @Column(name = "email")
     private String email;
 
     @Column(name = "disabled")
@@ -85,11 +86,9 @@ public class User implements UserDetails {
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
-        roles.forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority(role.getRolename()));
-        });
-        return authorities;
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.getRolename()))
+                .collect(Collectors.toSet());
     }
 
 }

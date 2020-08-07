@@ -13,7 +13,7 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name = "rolename")
+    @Column(name = "rolename", unique = true)
     private String rolename;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "role_privilege",

@@ -3,7 +3,7 @@ package com.riot.psycontrol.model;
 import lombok.Data;
 
 @Data
-public class SignIn {
+public class SignUp {
     private String username;
     private String password;
     private String firstname;

@@ -1,9 +1,11 @@
 package com.riot.psycontrol.service;
 
+import com.riot.psycontrol.dto.UserDTO;
 import com.riot.psycontrol.entity.User;
+import com.riot.psycontrol.model.SignUp;
 import com.riot.psycontrol.repo.RoleRepo;
 import com.riot.psycontrol.repo.UserRepo;
-import com.riot.psycontrol.model.AuthenticationResponse;
+import com.riot.psycontrol.model.AuthResponse;
 import com.riot.psycontrol.security.CustomException;
 import com.riot.psycontrol.security.jwt.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +19,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -38,83 +42,87 @@ public class UserService {
     @Autowired
     AuthenticationManager authenticationManager;
 
-    public List<User> getUsers() {
-        return userRepo.findAll();
+    public List<UserDTO> getUsers() {
+        return userRepo.findAll()
+                .stream()
+                .map(user -> new UserDTO(user))
+                .collect(Collectors.toList());
     }
 
-    public User signUpUser(User user) {
-        if (!userRepo.existsByUsername(user.getUsername())) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setUsername(user.getUsername());
+    public UserDTO signUpUser(@NotNull SignUp signUp) {
+        if (!userRepo.existsByUsername(signUp.getUsername())) {
+            var user = new User();
+            user.setUsername(signUp.getUsername());
+            user.setPassword(passwordEncoder.encode(signUp.getPassword()));
+            user.setFirstname(signUp.getFirstname());
+            user.setLastname(signUp.getLastname());
             user.setEmail(user.getEmail());
             user.setRoles(Arrays.asList(roleRepo.findByRolename("DEMO")));
-            userRepo.save(user);
-        } else {
+            return new UserDTO(userRepo.save(user));
+        } else
             throw new CustomException("Username is already in use", HttpStatus.NOT_ACCEPTABLE);
-        }
-        return user;
     }
 
-    public AuthenticationResponse signInUser(String username, String password) {
+    public AuthResponse signInUser(@NotNull String username, String password) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            User u = userRepo.findByUsername(username);
-            AuthenticationResponse authenticationResponse = new AuthenticationResponse();
-            authenticationResponse.setUsername(username);
-            authenticationResponse.setFirstname(u.getFirstname());
-            authenticationResponse.setLastname(u.getLastname());
-            authenticationResponse.setEmail(u.getEmail());
-            authenticationResponse.setRoles(u.getRoles());
-            authenticationResponse.setToken(jwtProvider.createToken(username, u.getRoles()));
-            return authenticationResponse;
+            var u = userRepo.findByUsername(username);
+            var auth = new AuthResponse();
+            auth.setToken(jwtProvider.createToken(username, u.getRoles()));
+            return auth;
         } catch (AuthenticationException e) {
             throw new CustomException("Invalid username or password", HttpStatus.UNAUTHORIZED);
         }
-
-
     }
 
-    public User getUserByUsername(String username) {
-        return userRepo.findByUsername(username);
+    public UserDTO getUserByUsername(@NotNull String username) {
+        var user = userRepo.findByUsername(username);
+        if (user != null)
+            return new UserDTO(user);
+        else
+            throw new CustomException("This user does not exist", HttpStatus.BAD_REQUEST);
     }
 
-    public User saveUser(User user) {
+    public UserDTO saveUser(@NotNull User user) {
         if (!userRepo.existsByUsername(user.getUsername())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            return userRepo.save(user);
-        } else {
+            return new UserDTO(userRepo.save(user));
+        } else
             throw new CustomException("Username is already in use", HttpStatus.NOT_MODIFIED);
-        }
     }
 
-    public User updateUser(User user) {
-        User saved = userRepo.findByUsername(user.getUsername());
+    public UserDTO updateUser(@NotNull UserDTO userDTO) {
+        var saved = userRepo.findByUsername(userDTO.getUsername());
         if (saved != null) {
-            saved.setFirstname(user.getFirstname());
-            saved.setLastname(user.getLastname());
-            saved.setEmail(user.getEmail());
-            saved.setRoles(user.getRoles());
-            return userRepo.save(saved);
-        } else {
+            saved.setUsername(userDTO.getUsername());
+            saved.setFirstname(userDTO.getFirstname());
+            saved.setLastname(userDTO.getLastname());
+            saved.setEmail(userDTO.getEmail());
+            saved.setRoles(userDTO.getRoles()
+                    .stream()
+                    .map(role -> roleRepo.findByRolename(role))
+                    .collect(Collectors.toList())
+            );
+            return new UserDTO(userRepo.save(saved));
+        } else
             throw new CustomException("This user doesn't exist", HttpStatus.NOT_MODIFIED);
-        }
     }
 
-    public void deleteUser(String username) {
-        User user = userRepo.findByUsername(username);
+    public void deleteUser(@NotNull String username) {
+        var user = userRepo.findByUsername(username);
         if (user != null)
             userRepo.delete(user);
         else
             throw new CustomException("User does not exist", HttpStatus.BAD_REQUEST);
     }
 
-    public User whoAmI() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
-        return getUserByUsername(username);
-    }
-
-    public String refresh(String username) {
-        return jwtProvider.createToken(username, userRepo.findByUsername(username).getRoles());
+    public AuthResponse refresh(@NotNull String username) {
+        var user = userRepo.findByUsername(username);
+        if (user != null) {
+            var authenticated = new AuthResponse();
+            var token = jwtProvider.createToken(username, user.getRoles());
+            authenticated.setToken(token);
+            return authenticated;
+        } else throw new CustomException("Not found", HttpStatus.BAD_REQUEST);
     }
 }
