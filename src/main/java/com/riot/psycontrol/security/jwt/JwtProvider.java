@@ -1,22 +1,18 @@
 package com.riot.psycontrol.security.jwt;
 
-import com.riot.psycontrol.entity.Role;
 import com.riot.psycontrol.security.CustomException;
+import com.riot.psycontrol.service.UserService;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.List;
 import java.util.function.Function;
 
 @Component
@@ -28,30 +24,35 @@ public class JwtProvider {
     private long validityInMilliseconds;
 
     @Autowired
-    private UserDetailsService userDetailsServiceDetails;
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    UserService userService;
 
     /**
-     *
      * @param username passed from userService
-     * @param roles user permissions extracted from database
-     * @return Generated Json Web Token
+     * @return generated Json Web Token into String
      */
-    public String createToken(String username, List<Role> roles) {
-        List<GrantedAuthority> grantedAuthorityList = new ArrayList<>();
-        roles.forEach( role ->{
-            grantedAuthorityList.add(new SimpleGrantedAuthority(role.getRolename()));
-        });
-        Claims claims = Jwts.claims().setSubject(username);
-        claims.put("auth", grantedAuthorityList);
-        Date now = new Date();
-        Date validity = new Date(now.getTime() + validityInMilliseconds);
+    public String createToken(@NotNull String username) {
+        var user = userService.getUserByUsername(username);
+        if (user != null) {
+            var claims = Jwts.claims().setSubject(username);
+            claims.put("username", user.getUsername());
+            claims.put("firstname", user.getFirstname());
+            claims.put("lastname", user.getLastname());
+            claims.put("email", user.getEmail());
+            claims.put("roles", user.getRoles());
+            var now = new Date();
+            var validity = new Date(now.getTime() + validityInMilliseconds);
 
-        return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(validity)
-                .signWith(SignatureAlgorithm.HS256, secretKey)
-                .compact();
+            return Jwts.builder()
+                    .setClaims(claims)
+                    .setIssuedAt(now)
+                    .setExpiration(validity)
+                    .signWith(SignatureAlgorithm.HS256, secretKey)
+                    .compact();
+        } else
+            throw new CustomException("User does not exist", HttpStatus.BAD_REQUEST);
     }
 
     public boolean validateToken(String token) {
@@ -60,11 +61,11 @@ public class JwtProvider {
             return true;
         } catch (SignatureException ex) {
             throw new CustomException("Invalid JWT Signature", HttpStatus.UNAUTHORIZED);
-        }catch (MalformedJwtException ex) {
+        } catch (MalformedJwtException ex) {
             throw new CustomException("Invalid JWT token", HttpStatus.UNAUTHORIZED);
-        }catch (ExpiredJwtException ex) {
+        } catch (ExpiredJwtException ex) {
             throw new CustomException("Expired JWT token", HttpStatus.UNAUTHORIZED);
-        }catch (UnsupportedJwtException ex) {
+        } catch (UnsupportedJwtException ex) {
             throw new CustomException("Unsupported JWT token", HttpStatus.UNAUTHORIZED);
         } catch (IllegalArgumentException ex) {
             throw new CustomException("Illegal string token", HttpStatus.UNAUTHORIZED);
@@ -91,9 +92,7 @@ public class JwtProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsServiceDetails.loadUserByUsername(extractUsername(token));
+        var userDetails = userDetailsService.loadUserByUsername(extractUsername(token));
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
-
-
 }

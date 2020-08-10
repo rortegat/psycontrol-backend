@@ -2,25 +2,16 @@ package com.riot.psycontrol.service;
 
 import com.riot.psycontrol.dto.UserDTO;
 import com.riot.psycontrol.entity.User;
-import com.riot.psycontrol.model.SignUp;
 import com.riot.psycontrol.repo.RoleRepo;
 import com.riot.psycontrol.repo.UserRepo;
-import com.riot.psycontrol.model.AuthResponse;
 import com.riot.psycontrol.security.CustomException;
 import com.riot.psycontrol.security.jwt.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,40 +30,11 @@ public class UserService {
     @Autowired
     JwtProvider jwtProvider;
 
-    @Autowired
-    AuthenticationManager authenticationManager;
-
     public List<UserDTO> getUsers() {
         return userRepo.findAll()
                 .stream()
                 .map(user -> new UserDTO(user))
                 .collect(Collectors.toList());
-    }
-
-    public UserDTO signUpUser(@NotNull SignUp signUp) {
-        if (!userRepo.existsByUsername(signUp.getUsername())) {
-            var user = new User();
-            user.setUsername(signUp.getUsername());
-            user.setPassword(passwordEncoder.encode(signUp.getPassword()));
-            user.setFirstname(signUp.getFirstname());
-            user.setLastname(signUp.getLastname());
-            user.setEmail(user.getEmail());
-            user.setRoles(Arrays.asList(roleRepo.findByRolename("DEMO")));
-            return new UserDTO(userRepo.save(user));
-        } else
-            throw new CustomException("Username is already in use", HttpStatus.NOT_ACCEPTABLE);
-    }
-
-    public AuthResponse signInUser(@NotNull String username, String password) {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            var u = userRepo.findByUsername(username);
-            var auth = new AuthResponse();
-            auth.setToken(jwtProvider.createToken(username, u.getRoles()));
-            return auth;
-        } catch (AuthenticationException e) {
-            throw new CustomException("Invalid username or password", HttpStatus.UNAUTHORIZED);
-        }
     }
 
     public UserDTO getUserByUsername(@NotNull String username) {
@@ -116,13 +78,4 @@ public class UserService {
             throw new CustomException("User does not exist", HttpStatus.BAD_REQUEST);
     }
 
-    public AuthResponse refresh(@NotNull String username) {
-        var user = userRepo.findByUsername(username);
-        if (user != null) {
-            var authenticated = new AuthResponse();
-            var token = jwtProvider.createToken(username, user.getRoles());
-            authenticated.setToken(token);
-            return authenticated;
-        } else throw new CustomException("Not found", HttpStatus.BAD_REQUEST);
-    }
 }

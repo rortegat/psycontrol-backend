@@ -1,4 +1,4 @@
-package com.riot.psycontrol.service;
+package com.riot.psycontrol.service.impl;
 
 import com.riot.psycontrol.entity.User;
 import com.riot.psycontrol.repo.UserRepo;

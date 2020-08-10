@@ -37,21 +37,6 @@ public class UserController {
         return userService.getUserByUsername(principal.getName());
     }
 
-    @PostMapping("/signup")
-    public UserDTO singUp(@RequestBody SignUp signUp) {
-        return userService.signUpUser(signUp);
-    }
-
-    @PostMapping("/login")
-    public AuthResponse login(@RequestBody AuthRequest request) {
-        return userService.signInUser(request.getUsername(), request.getPassword());
-    }
-
-    @PostMapping("/refresh")
-    public AuthResponse refreshToken(Principal principal) {
-        return userService.refresh(principal.getName());
-    }
-
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('ADMIN')")
     public UserDTO createUser(@RequestBody User user) {
