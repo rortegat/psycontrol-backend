@@ -1,6 +1,6 @@
 package com.riot.psycontrol.config;
 
-import com.riot.psycontrol.security.jwt.JwtRequestFilter;
+import com.riot.psycontrol.util.jwt.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -19,11 +19,8 @@ public class Consult extends Auditable<String> {
     private String reason;
     @Column(name="description")
     private String description;
-    @Column(name="patient_id")
-    private Integer patientId;
-
-    /*@ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
-    private Patient patient;*/
+    private Patient patient;
 
 }

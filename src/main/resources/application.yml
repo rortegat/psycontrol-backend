@@ -8,7 +8,7 @@ spring:
     properties:
       dialect: org.hibernate.dialect.MySQL57InnoDBDialect
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     servlet:
       multipart:
         enabled: true
@@ -18,8 +18,8 @@ spring:
 config:
   file:
     #upload-dir: /storage #For Docker container volume
-    upload-dir: ${HOME}/storage #For non root Linux filesystem
-    #upload-dir: C:\\storage # For Windows filesystem
+    #upload-dir: ${HOME}/storage #For non root Linux filesystem
+    upload-dir: C:\\storage # For Windows filesystem
   jwt:
     secretKey: SuperSecreto
     validityInMilliseconds: 3600000 #60*60000 = 1Hour

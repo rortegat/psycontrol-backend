@@ -1,6 +1,6 @@
 package com.riot.psycontrol.config;
 
-import com.riot.psycontrol.security.AuditorAwareImpl;
+import com.riot.psycontrol.util.AuditorAwareImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -16,8 +16,8 @@ public class UserDTO {
     private String email;
     private Set<String> roles;
 
-    public UserDTO(User user){
-        this.id= user.getId();
+    public UserDTO(User user) {
+        this.id = user.getId();
         this.username = user.getUsername();
         this.firstname = user.getFirstname();
         this.lastname = user.getLastname();

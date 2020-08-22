@@ -4,7 +4,7 @@ import com.riot.psycontrol.dto.ConsultDTO;
 import com.riot.psycontrol.entity.Consult;
 import com.riot.psycontrol.repo.ConsultRepo;
 import com.riot.psycontrol.repo.PatientRepo;
-import com.riot.psycontrol.security.CustomException;
+import com.riot.psycontrol.util.CustomException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,45 +23,52 @@ public class ConsultService {
     @Autowired
     private PatientRepo patientRepo;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
     public List<ConsultDTO> getConsultsByPatientId(@NotNull Integer id) {
         return consultRepo.findByPatientId(id)
                 .stream()
-                .map(consult -> modelMapper.map(consult, ConsultDTO.class))
+                .map(ConsultDTO::new)
                 .collect(Collectors.toList());
     }
 
     public ConsultDTO getConsult(@NotNull Integer id) {
         var consult = consultRepo.findById(id);
-        if (!consult.isPresent())
+        if (consult.isPresent())
+            return new ConsultDTO(consult.get());
+        else
             throw new CustomException("This consult does not exist", HttpStatus.BAD_REQUEST);
-        return modelMapper.map(consult.get(), ConsultDTO.class);
+
     }
 
     public ConsultDTO saveConsult(@NotNull ConsultDTO consultDTO) {
+        var consult = new Consult();
         var patient = patientRepo.findById(consultDTO.getPatientId());
-        if (!patient.isPresent())
-            throw new CustomException("This patient does not exist", HttpStatus.BAD_REQUEST);
-        var consult = modelMapper.map(consultDTO, Consult.class);
-        return modelMapper.map(consultRepo.save(consult), ConsultDTO.class);
+
+        consult.setReason(consultDTO.getReason());
+        consult.setDescription(consultDTO.getDescription());
+        if (patient.isPresent())
+            consult.setPatient(patient.get());
+        else
+            throw new CustomException("blablabla", HttpStatus.BAD_GATEWAY);
+        return new ConsultDTO(consultRepo.save(consult));
     }
 
     public ConsultDTO updateConsult(@NotNull ConsultDTO consultDTO) {
         var consult = consultRepo.findById(consultDTO.getId());
-        if (!consult.isPresent())
+        if (consult.isPresent()) {
+            var updated = consult.get();
+            updated.setReason(consultDTO.getReason());
+            updated.setDescription(consultDTO.getDescription());
+            return new ConsultDTO(consultRepo.save(updated));
+        } else
             throw new CustomException("This consult does not exist", HttpStatus.BAD_REQUEST);
-        var updated = consult.get();
-        updated.setReason(consultDTO.getReason());
-        updated.setDescription(consultDTO.getDescription());
-        return modelMapper.map(consultRepo.save(updated), ConsultDTO.class);
     }
 
     public void deleteConsult(@NotNull Integer id) {
         var consult = consultRepo.findById(id);
-        if (!consult.isPresent())
+        if (consult.isPresent())
+            consultRepo.delete(consult.get());
+        else
             throw new CustomException("This consult does not exist", HttpStatus.BAD_REQUEST);
-        consultRepo.delete(consult.get());
+
     }
 }

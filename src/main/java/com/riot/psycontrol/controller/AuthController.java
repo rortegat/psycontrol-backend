@@ -1,12 +1,11 @@
 package com.riot.psycontrol.controller;
 
 import com.riot.psycontrol.dto.UserDTO;
-import com.riot.psycontrol.model.AuthRequest;
-import com.riot.psycontrol.model.AuthResponse;
-import com.riot.psycontrol.model.SignUp;
-import com.riot.psycontrol.security.CustomException;
+import com.riot.psycontrol.util.AuthRequest;
+import com.riot.psycontrol.util.AuthResponse;
+import com.riot.psycontrol.util.SignUp;
+import com.riot.psycontrol.util.CustomException;
 import com.riot.psycontrol.service.IAuthService;
-import com.riot.psycontrol.service.impl.AuthServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;

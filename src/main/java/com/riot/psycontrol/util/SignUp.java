@@ -1,4 +1,4 @@
-package com.riot.psycontrol.model;
+package com.riot.psycontrol.util;
 
 import lombok.Data;
 

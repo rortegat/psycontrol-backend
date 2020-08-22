@@ -3,7 +3,7 @@ package com.riot.psycontrol.service;
 import com.riot.psycontrol.dto.PatientDTO;
 import com.riot.psycontrol.entity.Patient;
 import com.riot.psycontrol.repo.PatientRepo;
-import com.riot.psycontrol.security.CustomException;
+import com.riot.psycontrol.util.CustomException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

@@ -2,9 +2,6 @@ package com.riot.psycontrol.controller;
 
 import com.riot.psycontrol.dto.UserDTO;
 import com.riot.psycontrol.entity.User;
-import com.riot.psycontrol.model.AuthRequest;
-import com.riot.psycontrol.model.AuthResponse;
-import com.riot.psycontrol.model.SignUp;
 import com.riot.psycontrol.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
