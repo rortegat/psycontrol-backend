@@ -4,7 +4,6 @@ import com.riot.psycontrol.dto.FileDTO;
 import com.riot.psycontrol.entity.FileEntity;
 import com.riot.psycontrol.repo.FileRepo;
 import com.riot.psycontrol.util.CustomException;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -33,13 +32,10 @@ public class FileService {
     @Autowired
     private FileRepo fileRepo;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
     public List<FileDTO> getAllUserFiles(@NotNull String username) {
         var files = fileRepo.findByCreatedBy(username);
         return files.stream()
-                .map(fileEntity -> modelMapper.map(fileEntity, FileDTO.class))
+                .map(FileDTO::new)
                 .collect(Collectors.toList());
     }
 
@@ -87,7 +83,7 @@ public class FileService {
                         file.getContentType(),
                         file.getSize(),
                         filePath.toString());
-                return modelMapper.map(fileRepo.save(nuevo), FileDTO.class);
+                return new FileDTO(fileRepo.save(nuevo));
             }
         } catch (IOException e) {
             throw new CustomException("Failed to store file " + filename, HttpStatus.NOT_MODIFIED);

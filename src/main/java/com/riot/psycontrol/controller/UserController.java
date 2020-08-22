@@ -1,7 +1,6 @@
 package com.riot.psycontrol.controller;
 
 import com.riot.psycontrol.dto.UserDTO;
-import com.riot.psycontrol.entity.User;
 import com.riot.psycontrol.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,8 +35,8 @@ public class UserController {
 
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public UserDTO createUser(@RequestBody User user) {
-        return userService.saveUser(user);
+    public UserDTO createUser(@RequestBody UserDTO userDTO) {
+        return userService.saveUser(userDTO);
     }
 
     @PutMapping("/update")

@@ -1,12 +1,10 @@
 package com.riot.psycontrol.service;
 
-import com.riot.psycontrol.dto.PrivilegeDTO;
 import com.riot.psycontrol.dto.RoleDTO;
 import com.riot.psycontrol.entity.Role;
 import com.riot.psycontrol.repo.PrivilegeRepo;
 import com.riot.psycontrol.repo.RoleRepo;
 import com.riot.psycontrol.util.CustomException;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -23,9 +21,6 @@ public class RoleService {
 
     @Autowired
     private PrivilegeRepo privilegeRepo;
-
-    @Autowired
-    private ModelMapper modelMapper;
 
     public RoleDTO getRoleById(@NotNull Integer id) {
         var role = roleRepo.findById(id);
@@ -59,6 +54,10 @@ public class RoleService {
         var role = roleRepo.findByRolename(roleDTO.getRolename());
         if (role != null) {
             role.setRolename(roleDTO.getRolename());
+            role.setPrivileges(roleDTO.getPrivileges()
+                    .stream()
+                    .map(privilege->privilegeRepo.findByPrivilegename(privilege))
+                    .collect(Collectors.toList()));
             return new RoleDTO(roleRepo.save(role));
         } else
             throw new CustomException("This role does not exist", HttpStatus.BAD_REQUEST);

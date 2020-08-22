@@ -3,8 +3,8 @@ package com.riot.psycontrol.service;
 import com.riot.psycontrol.dto.PatientDTO;
 import com.riot.psycontrol.entity.Patient;
 import com.riot.psycontrol.repo.PatientRepo;
+import com.riot.psycontrol.repo.UserRepo;
 import com.riot.psycontrol.util.CustomException;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,34 +19,40 @@ import java.util.stream.Collectors;
 public class PatientService {
 
     @Autowired
-    ModelMapper modelMapper;
+    PatientRepo patientRepo;
 
     @Autowired
-    PatientRepo patientRepo;
+    UserRepo userRepo;
 
     public List<PatientDTO> getPatients(@NotNull String username) {
         var patients = patientRepo.findAllByCreatedBy(username);
         return patients.stream()
-                .map(patient -> modelMapper.map(patient, PatientDTO.class))
+                .map(PatientDTO::new)
                 .collect(Collectors.toList());
     }
 
     public Page<PatientDTO> getPagePatients(@NotNull Pageable pageable, @NotNull String username) {
         var page = patientRepo.findAllByCreatedBy(pageable, username);
-        return page.map(patient -> modelMapper.map(patient, PatientDTO.class));
+        return page.map(PatientDTO::new);
     }
 
     public PatientDTO getPatientById(@NotNull Integer id) {
         var patient = patientRepo.findById(id);
         if (patient.isPresent())
-            return modelMapper.map(patient.get(), PatientDTO.class);
-        else  
+            return new PatientDTO(patient.get());
+        else
             throw new CustomException("This patient does not exist", HttpStatus.BAD_REQUEST);
     }
 
     public PatientDTO savePatient(@NotNull PatientDTO patientDTO) {
-        var patient = modelMapper.map(patientDTO, Patient.class);
-        return modelMapper.map(patientRepo.save(patient), PatientDTO.class);
+        var patient = new Patient();
+        patient.setFirstname(patientDTO.getFirstname());
+        patient.setLastname(patientDTO.getLastname());
+        patient.setEmail(patientDTO.getEmail());
+        patient.setMobile(patientDTO.getMobile());
+        patient.setPhone(patientDTO.getPhone());
+        patient.setUser(userRepo.findByUsername(patientDTO.getUsername()));
+        return new PatientDTO(patientRepo.save(patient));
     }
 
     public PatientDTO updatePatient(@NotNull PatientDTO patientDTO) {
@@ -58,7 +64,7 @@ public class PatientService {
             updated.setEmail(patientDTO.getEmail());
             updated.setPhone(patientDTO.getPhone());
             updated.setMobile(patientDTO.getMobile());
-            return modelMapper.map(patientRepo.save(updated), PatientDTO.class);
+            return new PatientDTO(patientRepo.save(updated));
         } else
             throw new CustomException("This patient does not exist", HttpStatus.BAD_REQUEST);
     }

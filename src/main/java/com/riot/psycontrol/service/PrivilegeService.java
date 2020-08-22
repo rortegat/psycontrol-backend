@@ -4,7 +4,6 @@ import com.riot.psycontrol.dto.PrivilegeDTO;
 import com.riot.psycontrol.entity.Privilege;
 import com.riot.psycontrol.repo.PrivilegeRepo;
 import com.riot.psycontrol.util.CustomException;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,20 +17,18 @@ public class PrivilegeService {
 
     @Autowired
     PrivilegeRepo privilegeRepo;
-    @Autowired
-    ModelMapper modelMapper;
 
     public List<PrivilegeDTO> getPrivileges() {
         return privilegeRepo.findAll()
                 .stream()
-                .map(privilege -> modelMapper.map(privilege, PrivilegeDTO.class))
+                .map(PrivilegeDTO::new)
                 .collect(Collectors.toList());
     }
 
     public PrivilegeDTO getPrivilege(@NotNull String privilegename) {
         var privilege = privilegeRepo.findByPrivilegename(privilegename);
         if (privilege != null)
-            return modelMapper.map(privilege, PrivilegeDTO.class);
+            return new PrivilegeDTO(privilege);
         else
             throw new CustomException("This privilege does not exist", HttpStatus.BAD_REQUEST);
     }
@@ -39,14 +36,14 @@ public class PrivilegeService {
     public PrivilegeDTO createPrivilege(@NotNull PrivilegeDTO privilegeDTO) {
         var privilege = new Privilege();
         privilege.setPrivilegename(privilegeDTO.getPrivilegename());
-        return modelMapper.map(privilegeRepo.save(privilege), PrivilegeDTO.class);
+        return new PrivilegeDTO(privilegeRepo.save(privilege));
     }
 
     public PrivilegeDTO updatePrivilege(@NotNull PrivilegeDTO privilegeDTO) {
         var privilege = privilegeRepo.findByPrivilegename(privilegeDTO.getPrivilegename());
         if (privilege != null) {
             privilege.setPrivilegename(privilege.getPrivilegename());
-            return modelMapper.map(privilegeRepo.save(privilege), PrivilegeDTO.class);
+            return new PrivilegeDTO(privilegeRepo.save(privilege));
         } else
             throw new CustomException("Privilege does not exist", HttpStatus.BAD_REQUEST);
     }

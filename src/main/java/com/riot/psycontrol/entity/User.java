@@ -34,7 +34,6 @@ public class User implements UserDetails {
     private String lastname;
     @Column(name = "email")
     private String email;
-
     @Column(name = "disabled")
     private boolean disabled;
     @Column(name = "account_locked")

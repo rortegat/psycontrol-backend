@@ -15,11 +15,10 @@ public class Role {
     private Integer id;
     @Column(name = "rolename", unique = true)
     private String rolename;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "role_privilege",
             joinColumns = {@JoinColumn(name = "role_id")},
             inverseJoinColumns = {@JoinColumn(name = "privilege_id")})
     private List<Privilege> privileges;
-
-
 }

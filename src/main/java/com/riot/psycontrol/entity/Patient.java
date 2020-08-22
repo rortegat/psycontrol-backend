@@ -29,10 +29,10 @@ public class Patient extends Auditable<String> {
     private String phone;
     @Column(name="mobile")
     private String mobile;
-/*    @ManyToOne
-    @JoinColumn(name="user_id")
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id", referencedColumnName = "id")
     private User user;
- */
     @OneToMany(fetch = FetchType.LAZY, mappedBy="patient")
     private Set<Consult> consults;
 

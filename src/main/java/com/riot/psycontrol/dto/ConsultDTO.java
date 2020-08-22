@@ -1,12 +1,15 @@
 package com.riot.psycontrol.dto;
 
 import com.riot.psycontrol.entity.Consult;
-import com.riot.psycontrol.entity.Patient;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ConsultDTO {
     private Integer id;
     private String reason;

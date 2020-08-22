@@ -33,7 +33,7 @@ public class UserService {
     public List<UserDTO> getUsers() {
         return userRepo.findAll()
                 .stream()
-                .map(user -> new UserDTO(user))
+                .map(UserDTO::new)
                 .collect(Collectors.toList());
     }
 
@@ -45,9 +45,18 @@ public class UserService {
             throw new CustomException("This user does not exist", HttpStatus.BAD_REQUEST);
     }
 
-    public UserDTO saveUser(@NotNull User user) {
-        if (!userRepo.existsByUsername(user.getUsername())) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public UserDTO saveUser(@NotNull UserDTO userDTO) {
+        if (!userRepo.existsByUsername(userDTO.getUsername())) {
+            var user = new User();
+            user.setUsername(userDTO.getUsername());
+            user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+            user.setFirstname(userDTO.getFirstname());
+            user.setLastname(userDTO.getLastname());
+            user.setEmail(userDTO.getEmail());
+            user.setRoles(userDTO.getRoles()
+                    .stream()
+                    .map(role -> roleRepo.findByRolename(role))
+                    .collect(Collectors.toList()));
             return new UserDTO(userRepo.save(user));
         } else
             throw new CustomException("Username is already in use", HttpStatus.NOT_MODIFIED);
