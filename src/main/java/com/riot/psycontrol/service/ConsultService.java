@@ -5,7 +5,6 @@ import com.riot.psycontrol.entity.Consult;
 import com.riot.psycontrol.repo.ConsultRepo;
 import com.riot.psycontrol.repo.PatientRepo;
 import com.riot.psycontrol.util.CustomException;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
