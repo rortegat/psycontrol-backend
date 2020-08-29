@@ -35,5 +35,4 @@ public class Patient extends Auditable<String> {
     private User user;
     @OneToMany(fetch = FetchType.LAZY, mappedBy="patient")
     private Set<Consult> consults;
-
 }

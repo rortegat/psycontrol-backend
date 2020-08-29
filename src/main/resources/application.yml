@@ -8,12 +8,16 @@ spring:
     properties:
       dialect: org.hibernate.dialect.MySQL57InnoDBDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     servlet:
       multipart:
         enabled: true
         max-file-size: 10MB
         max-request-size: 10MB
+
+lombok:
+  equalsAndHashCode:
+    callSuper: call
 
 config:
   file:
