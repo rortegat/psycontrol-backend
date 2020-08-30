@@ -1,14 +1,13 @@
 package com.riot.psycontrol.controller;
 
 import com.riot.psycontrol.dto.FileDTO;
-import com.riot.psycontrol.service.FileService;
+import com.riot.psycontrol.service.impl.FileServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,25 +23,25 @@ public class FileController {
     private String rootDir;
 
     @Autowired
-    private FileService fileService;
+    private FileServiceImpl fileServiceImpl;
 
     //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/upload")
     public FileDTO uploadUserFile(@RequestParam("file") MultipartFile file, Principal principal) {
         String dirPath = rootDir + File.separator+principal.getName();
-        return fileService.uploadFile(dirPath, file);
+        return fileServiceImpl.uploadFile(dirPath, file);
     }
 
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/all")
     public List<FileDTO> getAllUserFiles(Principal principal){
-        return fileService.getAllUserFiles(principal.getName());
+        return fileServiceImpl.getAllUserFiles(principal.getName());
     }
 
     @GetMapping("/preview/{id}")
     public ResponseEntity<Resource> getImageAsset(@PathVariable String id) {
-        var file = fileService.getById(id);
-        Resource resource = fileService.getResource(file.getPath(), file.getFilename());
+        var file = fileServiceImpl.getById(id);
+        Resource resource = fileServiceImpl.getResource(file.getPath(), file.getFilename());
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.parseMediaType(file.getContentType()))
@@ -55,6 +54,6 @@ public class FileController {
     //@PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public void deleteFile( @PathVariable String id) {
-        fileService.deleteFile(id);
+        fileServiceImpl.deleteFile(id);
     }
 }

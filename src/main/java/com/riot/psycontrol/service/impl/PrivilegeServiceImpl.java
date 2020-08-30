@@ -1,4 +1,4 @@
-package com.riot.psycontrol.service;
+package com.riot.psycontrol.service.impl;
 
 import com.riot.psycontrol.dto.PrivilegeDTO;
 import com.riot.psycontrol.entity.Privilege;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class PrivilegeService {
+public class PrivilegeServiceImpl {
 
     @Autowired
     PrivilegeRepo privilegeRepo;

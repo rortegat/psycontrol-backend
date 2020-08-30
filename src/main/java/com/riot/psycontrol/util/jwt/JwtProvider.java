@@ -1,7 +1,7 @@
 package com.riot.psycontrol.util.jwt;
 
 import com.riot.psycontrol.util.CustomException;
-import com.riot.psycontrol.service.UserService;
+import com.riot.psycontrol.service.impl.UserServiceImpl;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,14 +27,14 @@ public class JwtProvider {
     private UserDetailsService userDetailsService;
 
     @Autowired
-    UserService userService;
+    UserServiceImpl userServiceImpl;
 
     /**
      * @param username passed from userService
      * @return generated Json Web Token into String
      */
     public String createToken(@NotNull String username) {
-        var user = userService.getUserByUsername(username);
+        var user = userServiceImpl.getUserByUsername(username);
         if (user != null) {
             var claims = Jwts.claims().setSubject(username);
             claims.put("username", user.getUsername());

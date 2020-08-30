@@ -5,6 +5,7 @@ import com.riot.psycontrol.dto.PatientDTO;
 import com.riot.psycontrol.entity.Patient;
 import com.riot.psycontrol.entity.User;
 import com.riot.psycontrol.repo.PatientRepo;
+import com.riot.psycontrol.service.impl.PatientServiceImpl;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class PatientServiceTest {
+class PatientServiceImplTest {
 
     private static Logger LOG = LoggerFactory.getLogger(PsyControlApplication.class);
 
@@ -43,7 +43,7 @@ class PatientServiceTest {
     private PatientRepo patientRepo;
 
     @InjectMocks
-    private PatientService patientService;
+    private PatientServiceImpl patientServiceImpl;
 
     @BeforeAll
     static void setUp() {
@@ -83,7 +83,7 @@ class PatientServiceTest {
                 .thenAnswer(invocation -> modelMapper.map(invocation.getArgument(0), invocation.getArgument(1)));
         when(patientRepo.findAllByCreatedBy(anyString())).thenReturn(patients);
         //when
-        var result = patientService.getPatients(user.getUsername());
+        var result = patientServiceImpl.getPatients(user.getUsername());
         //then
         verify(patientRepo).findAllByCreatedBy(anyString());
         assertEquals(2, result.size());
@@ -100,7 +100,7 @@ class PatientServiceTest {
         });
         when(patientRepo.findById(anyInt())).thenReturn(Optional.of(patient1));
         //when
-        var result = patientService.getPatientById(1);
+        var result = patientServiceImpl.getPatientById(1);
         //then
         verify(patientRepo).findById(anyInt());
         assertEquals("John", result.getFirstname());
@@ -115,7 +115,7 @@ class PatientServiceTest {
                 modelMapper.map(invocation.getArgument(0),invocation.getArgument(1)));
         when(patientRepo.save(any(Patient.class))).thenAnswer(i -> i.getArgument(0));
         //when
-        var result = patientService.savePatient(patientDTO);
+        var result = patientServiceImpl.savePatient(patientDTO);
         //then
         verify(patientRepo).save(any(Patient.class));
         assertEquals("John", result.getFirstname());
@@ -132,7 +132,7 @@ class PatientServiceTest {
         when(patientRepo.findById(anyInt())).thenReturn(Optional.of(patient1));
         when(patientRepo.save(any(Patient.class))).thenAnswer(i -> i.getArgument(0));
         //when
-        PatientDTO result = patientService.updatePatient(update);
+        PatientDTO result = patientServiceImpl.updatePatient(update);
         //then
         verify(patientRepo).findById(anyInt());
         verify(patientRepo).save(any(Patient.class));

@@ -1,7 +1,7 @@
 package com.riot.psycontrol.controller;
 
 import com.riot.psycontrol.dto.UserDTO;
-import com.riot.psycontrol.service.UserService;
+import com.riot.psycontrol.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -14,41 +14,41 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    UserService userService;
+    UserServiceImpl userServiceImpl;
 
     @GetMapping("/all")
     @PreAuthorize("hasAuthority('ADMIN')")
     public List<UserDTO> getUsers() {
-        return userService.getUsers();
+        return userServiceImpl.getUsers();
     }
 
     @GetMapping("/{username}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public UserDTO getUser(@PathVariable String username) {
-        return userService.getUserByUsername(username);
+        return userServiceImpl.getUserByUsername(username);
     }
 
     @GetMapping("/whoami")
     public UserDTO whoami(Principal principal) {
-        return userService.getUserByUsername(principal.getName());
+        return userServiceImpl.getUserByUsername(principal.getName());
     }
 
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('ADMIN')")
     public UserDTO createUser(@RequestBody UserDTO userDTO) {
-        return userService.saveUser(userDTO);
+        return userServiceImpl.saveUser(userDTO);
     }
 
     @PutMapping("/update")
     @PreAuthorize("hasAuthority('ADMIN')")
     public UserDTO updateUser(@RequestBody UserDTO userDTO) {
-        return userService.updateUser(userDTO);
+        return userServiceImpl.updateUser(userDTO);
     }
 
     @DeleteMapping("/delete/{username}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public void removeUser(@PathVariable String username) {
-        userService.deleteUser(username);
+        userServiceImpl.deleteUser(username);
     }
 
 }

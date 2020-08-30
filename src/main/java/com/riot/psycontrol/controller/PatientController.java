@@ -1,7 +1,7 @@
 package com.riot.psycontrol.controller;
 
 import com.riot.psycontrol.dto.PatientDTO;
-import com.riot.psycontrol.service.PatientService;
+import com.riot.psycontrol.service.impl.PatientServiceImpl;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,7 +16,7 @@ import java.util.List;
 public class PatientController {
 
     @Autowired
-    PatientService patientService;
+    PatientServiceImpl patientServiceImpl;
 
     @ApiOperation(value = "View a list of available patients", response = List.class)
     @ApiResponses(value = {
@@ -27,27 +27,27 @@ public class PatientController {
     })
     @GetMapping("/all")
     public Page<PatientDTO> listPatients(Pageable pageable, Principal principal){
-        return patientService.getPagePatients(pageable, principal.getName());
+        return patientServiceImpl.getPagePatients(pageable, principal.getName());
     }
 
     @GetMapping("/{id}")
     public PatientDTO getPatient(@PathVariable Integer id){
-        return patientService.getPatientById(id);
+        return patientServiceImpl.getPatientById(id);
     }
 
     @PostMapping("/add")
     public PatientDTO addPatient(@RequestBody PatientDTO patient){
-        return patientService.savePatient(patient);
+        return patientServiceImpl.savePatient(patient);
     }
 
     @PutMapping("/update")
     public PatientDTO updatePatient(@RequestBody PatientDTO patient){
-        return patientService.updatePatient(patient);
+        return patientServiceImpl.updatePatient(patient);
     }
 
     @DeleteMapping("/delete/{id}")
     public void deletePatient(@PathVariable Integer id){
-        patientService.removePatient(id);
+        patientServiceImpl.removePatient(id);
     }
 
 }
