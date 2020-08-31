@@ -21,7 +21,7 @@ import java.security.Principal;
 public class AuthController {
 
     @Autowired
-    @Qualifier(value = "AuthServiceImpl")
+    @Qualifier(value = "authServiceImpl")
     IAuthService authService;
 
     @PostMapping("/signup")

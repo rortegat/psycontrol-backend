@@ -1,9 +1,11 @@
 package com.riot.psycontrol.controller;
 
 import com.riot.psycontrol.dto.ConsultDTO;
+import com.riot.psycontrol.service.IPatientService;
 import com.riot.psycontrol.service.impl.ConsultServiceImpl;
 import com.riot.psycontrol.service.impl.PatientServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,7 +18,8 @@ public class ConsultController {
     ConsultServiceImpl consultServiceImpl;
 
     @Autowired
-    PatientServiceImpl patientServiceImpl;
+    @Qualifier("patientServiceImpl")
+    IPatientService patientService;
 
     @GetMapping("/patient/{id}")
     public List<ConsultDTO> listConsults(@PathVariable Integer id) {

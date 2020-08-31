@@ -1,8 +1,9 @@
 package com.riot.psycontrol.controller;
 
 import com.riot.psycontrol.dto.UserDTO;
-import com.riot.psycontrol.service.impl.UserServiceImpl;
+import com.riot.psycontrol.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,41 +15,42 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    UserServiceImpl userServiceImpl;
+    @Qualifier("userServiceImpl")
+    IUserService userService;
 
     @GetMapping("/all")
     @PreAuthorize("hasAuthority('ADMIN')")
     public List<UserDTO> getUsers() {
-        return userServiceImpl.getUsers();
+        return userService.getUsers();
     }
 
     @GetMapping("/{username}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public UserDTO getUser(@PathVariable String username) {
-        return userServiceImpl.getUserByUsername(username);
+        return userService.getUserByUsername(username);
     }
 
     @GetMapping("/whoami")
     public UserDTO whoami(Principal principal) {
-        return userServiceImpl.getUserByUsername(principal.getName());
+        return userService.getUserByUsername(principal.getName());
     }
 
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('ADMIN')")
     public UserDTO createUser(@RequestBody UserDTO userDTO) {
-        return userServiceImpl.saveUser(userDTO);
+        return userService.saveUser(userDTO);
     }
 
     @PutMapping("/update")
     @PreAuthorize("hasAuthority('ADMIN')")
     public UserDTO updateUser(@RequestBody UserDTO userDTO) {
-        return userServiceImpl.updateUser(userDTO);
+        return userService.updateUser(userDTO);
     }
 
     @DeleteMapping("/delete/{username}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public void removeUser(@PathVariable String username) {
-        userServiceImpl.deleteUser(username);
+        userService.deleteUser(username);
     }
 
 }

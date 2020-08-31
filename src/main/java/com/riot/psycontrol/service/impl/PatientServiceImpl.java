@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
+@Service("patientServiceImpl")
 public class PatientServiceImpl implements IPatientService {
 
     @Autowired

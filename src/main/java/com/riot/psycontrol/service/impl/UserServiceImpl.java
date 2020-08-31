@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
+@Service("userServiceImpl")
 public class UserServiceImpl implements IUserService {
 
     @Autowired

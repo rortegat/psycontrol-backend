@@ -1,8 +1,9 @@
 package com.riot.psycontrol.controller;
 
 import com.riot.psycontrol.dto.PrivilegeDTO;
-import com.riot.psycontrol.service.impl.PrivilegeServiceImpl;
+import com.riot.psycontrol.service.IPrivilegeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,11 +13,12 @@ import java.util.List;
 public class PrivilegeController {
 
     @Autowired
-    PrivilegeServiceImpl privilegeServiceImpl;
+    @Qualifier("privilegeServiceImpl")
+    IPrivilegeService privilegeService;
 
     @GetMapping("/all")
-    public List<PrivilegeDTO> getPrivilegesList(){
-        return  privilegeServiceImpl.getPrivileges();
+    public List<PrivilegeDTO> getPrivilegesList() {
+        return privilegeService.getPrivileges();
     }
 
 }

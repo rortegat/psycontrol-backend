@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
+@Service("consultServiceImpl")
 public class ConsultServiceImpl implements IConsultService {
 
     @Autowired

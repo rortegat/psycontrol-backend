@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 
-@Service(value = "AuthServiceImpl")
+@Service(value = "authServiceImpl")
 public class AuthServiceImpl implements IAuthService {
 
     @Autowired
