@@ -28,14 +28,14 @@ public class FileController {
     @Qualifier("fileServiceImpl")
     private IFileService fileService;
 
-    @PreAuthorize("hasRole('{ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/upload")
     public FileDTO uploadUserFile(@RequestParam("file") MultipartFile file, Principal principal) {
         String dirPath = rootDir + File.separator+principal.getName();
         return fileService.uploadFile(dirPath, file);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/all")
     public List<FileDTO> getAllUserFiles(Principal principal){
         return fileService.getAllUserFiles(principal.getName());
@@ -54,7 +54,7 @@ public class FileController {
                 .body(resource);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public void deleteFile( @PathVariable String id) {
         fileService.deleteFile(id);
